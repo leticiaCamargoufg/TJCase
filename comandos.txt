@@ -1,0 +1,2 @@
+pip freeze > requirements.txt (guardar todas as dependencias)
+pip install -r requirements.txt (instalar automaticamente todas as dependencias)
