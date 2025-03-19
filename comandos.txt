@@ -1,2 +1,7 @@
 pip freeze > requirements.txt (guardar todas as dependencias)
 pip install -r requirements.txt (instalar automaticamente todas as dependencias)
+
+
+banco de dados:
+flask db migrate - subir deploy banco
+flask db upgrade -

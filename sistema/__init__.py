@@ -10,13 +10,12 @@ app = Flask(__name__)
 app.secret_key = CHAVE_SECRETA_FLASK
 app.config.from_object('config')
 
-
 #Inicialização do BD
 db = SQLAlchemy()
 db.init_app(app)
 
 # Instância migration
-mi = Migrate(app, db)
+migrate = Migrate(app, db)
 
 #Instância login
 login_manager = LoginManager(app)
@@ -47,5 +46,7 @@ def require_roles(f):
 from sistema.models import base_model
 from sistema.models.autenticacao import role_model
 from sistema.models.autenticacao import usuario_model
+from sistema.models.upload_arquivo import upload_arquivo_model
 
 from sistema.views.autenticacao import login_view
+from sistema.views.autenticacao import usuario_view
