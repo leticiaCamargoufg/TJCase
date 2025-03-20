@@ -5,6 +5,10 @@ from flask import flash, redirect, render_template, url_for
 from sistema.models.autenticacao.usuario_model import *
 #from flask_login import login_required
 
+@app.route('/')
+def ent():
+    return render_template('autenticacao/login/login.html')
+
 @app.route('/index')
 def index():
     return render_template('index.html')

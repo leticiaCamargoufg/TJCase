@@ -1,3 +1,4 @@
+from flask import url_for
 from sistema.models.base_model import BaseModel, db
 from sistema import login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -21,21 +22,22 @@ class UsuarioModel(BaseModel, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     role = db.relationship('RoleModel', backref=db.backref('usuario', lazy = True))
     
-    # #Relacionamento 1:1 com tabela 'upload_aquivos'
-    # foto_perfil_id = db.Column(db.Integer, db.ForeignKey('upload_arquivo.id'))
-    # foto_perfil = db.relationship('UploadArquivoModel', backref=db.backref('usuario', lazy = True))
+    #Relacionamento 1:1 com tabela 'upload_aquivos'
+    foto_perfil_id = db.Column(db.Integer, db.ForeignKey('upload_arquivo.id'))
+    foto_perfil = db.relationship('UploadArquivoModel', backref=db.backref('usuario', lazy = True))
     
     # #Relacionamento 1:N com tabela 'CasoTeste'
     # casos_teste = db.relationship('CasoTeste', backref='usuario', lazy=True)
 
     ativo = db.Column(db.Boolean, nullable=False, default= True)
 
-    def __init__(self, nome, email, senha_hash, role_id, ativo):
+    def __init__(self, nome, email, senha_hash, role_id, ativo, foto_perfil_id):
         self.nome = nome
         self.email = email
         self.senha_hash = generate_password_hash(senha_hash)
         self.role_id = role_id
         self.ativo = ativo
+        self.foto_perfil_id = foto_perfil_id
         
     def set_password(self, senha):
         """Gera um hash seguro da senha e armazena"""
@@ -47,3 +49,8 @@ class UsuarioModel(BaseModel, UserMixin):
     
     def is_active(self):
         return self.ativo
+    
+    def get_foto_perfil(self):
+        if self.foto:
+            return url_for("static", filename=self.foto.caminho)  # Retorna caminho da imagem
+        return url_for("static", filename="uploads/default.png") 

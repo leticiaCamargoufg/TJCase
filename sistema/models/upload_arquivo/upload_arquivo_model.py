@@ -4,7 +4,7 @@ class UploadArquivoModel(BaseModel):
     
     '''Model reponsável por armazenar todos os arquivos que for feito upload'''
     
-    __table_name__= 'upload_arquivo'
+    __tablename__= 'upload_arquivo'
     id = db.Column(db.Integer, autoincrement= True, primary_key=True)
     nome = db.Column(db.String(100))
     caminho = db.Column(db.String(100))

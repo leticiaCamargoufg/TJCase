@@ -1,18 +1,23 @@
-from sistema import app, db, require_roles
+import os
 from flask import render_template, request, redirect, url_for, flash
+from sistema import app, db, require_roles  # Importa app corretamente
 from sistema.models.autenticacao.role_model import RoleModel
 from sistema.models.autenticacao.usuario_model import UsuarioModel
+from sistema.models.upload_arquivo.upload_arquivo_model import UploadArquivoModel
+from werkzeug.utils import secure_filename
+
+from sistema.utils import allowed_file
 
 @app.route('/usuarios')
 @require_roles
 def usuarios_listar():
-    usuarios = UsuarioModel.query.all()  # Busca todos os usuários cadastrados
+    usuarios = UsuarioModel.query.all()
     return render_template('autenticacao/usuarios_listar.html', usuarios=usuarios)
 
 @app.route('/usuario/cadastrar', methods=['GET', 'POST'])
 @require_roles
 def usuario_cadastrar():
-    cargos = RoleModel.busca_roles_asc_cargo()  # Busca os cargos disponíveis
+    cargos = RoleModel.busca_roles_asc_cargo()
 
     if request.method == 'POST': 
         campo_nome = request.form.get('campoNome')
@@ -21,26 +26,51 @@ def usuario_cadastrar():
         campo_confirmar_senha = request.form.get('campoConfirmarSenha')
         campo_cargo_id = request.form.get('campoCargo')
 
-        # Verifica se as senhas coincidem
         if campo_senha != campo_confirmar_senha:
             flash("As senhas não coincidem!", "danger")
             return redirect(url_for('usuario_cadastrar'))
 
-        # Verifica se o e-mail já está cadastrado
         usuario_existente = UsuarioModel.query.filter_by(email=campo_email).first()
         if usuario_existente:
             flash("E-mail já cadastrado!", "danger")
             return redirect(url_for('usuarios_cadastrar'))
+        
+        campo_foto = request.files['campoFotoPerfil']
+        foto_id = None  
 
-        # Criar o usuário corretamente com senha_hash e ativo
+        if campo_foto and allowed_file(campo_foto.filename):
+            nome_arquivo = secure_filename(f"{campo_email}_{campo_foto.filename}")
+            caminho_arquivo = f"uploads/{nome_arquivo}"
+            
+            # Obtém UPLOAD_FOLDER do app configurado corretamente
+            upload_folder = app.config.get("UPLOAD_FOLDER")
+
+            if not upload_folder:
+                raise RuntimeError("UPLOAD_FOLDER não está configurado corretamente!")
+
+            campo_foto.save(os.path.join(upload_folder, nome_arquivo))
+
+            arquivo = UploadArquivoModel(
+                nome=nome_arquivo,
+                caminho=caminho_arquivo,
+                extensao=nome_arquivo.rsplit(".", 1)[1],
+                tamanho=str(os.path.getsize(os.path.join(upload_folder, nome_arquivo)))
+            )
+
+            db.session.add(arquivo)
+            db.session.commit()
+
+            foto_id = arquivo.id
+            
         user = UsuarioModel(
             nome=campo_nome,
             email=campo_email,
-            senha_hash="",  # Será definido pelo set_password()
+            senha_hash="",
             role_id=campo_cargo_id,
-            ativo=True  
+            ativo=True,
+            foto_perfil_id=foto_id
         )
-        user.set_password(campo_senha)  # Criptografando a senha corretamente
+        user.set_password(campo_senha)
         db.session.add(user)
         db.session.commit()
 
@@ -48,6 +78,7 @@ def usuario_cadastrar():
         return redirect(url_for('usuarios_listar'))
 
     return render_template('autenticacao/usuario_cadastrar.html', cargos=cargos)
+
 
 @app.route("/usuario/editar/<int:id>", methods=['GET', 'POST'])
 @require_roles
