@@ -1,4 +1,4 @@
-from flask_login import login_user
+from flask_login import current_user, login_user
 from sistema import app, require_roles, request
 from flask import flash, redirect, render_template, url_for
 
@@ -10,6 +10,7 @@ def ent():
     return render_template('autenticacao/login/login.html')
 
 @app.route('/index')
+@require_roles
 def index():
     return render_template('index.html')
 

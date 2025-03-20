@@ -4,6 +4,8 @@ from sistema import login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+from sistema.models.upload_arquivo.upload_arquivo_model import UploadArquivoModel
+
 @login_manager.user_loader
 def get_user(user_id):
     return UsuarioModel.query.filter_by(id=user_id).first()
@@ -49,8 +51,10 @@ class UsuarioModel(BaseModel, UserMixin):
     
     def is_active(self):
         return self.ativo
-    
+
     def get_foto_perfil(self):
-        if self.foto:
-            return url_for("static", filename=self.foto.caminho)  # Retorna caminho da imagem
-        return url_for("static", filename="uploads/default.png") 
+        if self.foto_perfil_id:
+            arquivo = UploadArquivoModel.query.get(self.foto_perfil_id)
+            if arquivo:
+                return url_for('static', filename=arquivo.caminho)
+        return url_for('static', filename='uploads/undraw_profile.png')  

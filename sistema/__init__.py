@@ -65,6 +65,13 @@ from sistema.models.upload_arquivo import upload_arquivo_model
 from sistema.models.autenticacao import role_model
 from sistema.models.autenticacao import usuario_model
 
+@app.context_processor
+def inject_usuario():
+    """
+    Torna a variável `usuario` disponível globalmente em todos os templates.
+    """
+    return dict(usuario=current_user)
+
 # Importa as views
 from sistema.views.autenticacao import login_view
 from sistema.views.autenticacao import usuario_view

@@ -1,5 +1,5 @@
 <!-- Main Content -->
-<div id="content">
+<div id="content" >
 
     <!-- Topbar -->
     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -61,8 +61,7 @@
                             Usuário
                         {% endif %}
                     </span>
-                    <img class="img-profile rounded-circle"
-                        src="{{url_for('static', filename='images/undraw_profile.svg')}}">
+                    <img class="img-profile rounded-circle" src="{{ usuario.get_foto_perfil() }}" alt="Foto de Perfil">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

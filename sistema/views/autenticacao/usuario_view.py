@@ -103,7 +103,41 @@ def usuario_editar(id):
             return redirect(url_for('usuario_cadastrar'))
         
         usuario.set_password(usuario.senha_hash)
-        db.session.commit()  # Salva as alterações no banco
+        
+        
+         # 🔹 Lógica para a foto de perfil (Manter ou Substituir)
+        campo_foto = request.files['campoFotoPerfil']
+
+        if campo_foto and allowed_file(campo_foto.filename):
+            # Remove a foto antiga do servidor (Opcional)
+            if usuario.foto_perfil_id:
+                foto_antiga = UploadArquivoModel.query.get(usuario.foto_perfil_id)
+                if foto_antiga:
+                    try:
+                        os.remove(os.path.join(app.config["UPLOAD_FOLDER"], foto_antiga.nome))
+                    except FileNotFoundError:
+                        pass  # Se o arquivo não existir, continuamos sem erro
+
+                    db.session.delete(foto_antiga)  # Remove o registro antigo
+
+            # Salvar a nova foto
+            nome_arquivo = secure_filename(f"{usuario.email}_{campo_foto.filename}")
+            caminho_arquivo = f"uploads/{nome_arquivo}"
+            campo_foto.save(os.path.join(app.config["UPLOAD_FOLDER"], nome_arquivo))
+
+            nova_foto = UploadArquivoModel(
+                nome=nome_arquivo,
+                caminho=caminho_arquivo,
+                extensao=nome_arquivo.rsplit(".", 1)[1],
+                tamanho=str(os.path.getsize(os.path.join(app.config["UPLOAD_FOLDER"], nome_arquivo)))
+            )
+
+            db.session.add(nova_foto)
+            db.session.commit()
+            
+            usuario.foto_perfil_id = nova_foto.id  # Atualiza o usuário com a nova foto
+
+        db.session.commit()  # Salva todas as alterações
         flash("Usuário atualizado com sucesso!", "success")
         return redirect(url_for('usuarios_listar'))  # Redireciona após salvar
 
