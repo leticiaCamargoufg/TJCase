@@ -30,10 +30,16 @@ class UsuarioModel(BaseModel, UserMixin):
 
     ativo = db.Column(db.Boolean, nullable=False, default= True)
 
-    def __init__(self, nome, email, senha_hash, role_id, foto_perfil_id, ativo):
+    def __init__(self, nome, email, senha_hash, role_id, ativo):
         self.nome = nome
         self.email = email
         self.senha_hash = generate_password_hash(senha_hash)
         self.role_id = role_id
-        self.foto_perfil_id = foto_perfil_id
         self.ativo = ativo
+    def set_password(self, senha):
+        """Gera um hash seguro da senha e armazena"""
+        self.senha_hash = generate_password_hash(senha)
+
+    def check_password(self, senha):
+        """Verifica se a senha digitada corresponde ao hash armazenado"""
+        return check_password_hash(self.senha_hash, senha)

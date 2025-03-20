@@ -7,21 +7,17 @@
         <div class="col-md-9">
             <div class="card">
                 <div class="card-header text-center bg-primary text-white">
-                    <h4>Cadastro de Usuário</h4>
+                    <h4>Edição de Usuário</h4>
                 </div>
                 <div class="card-body">
-                    <form action="{{url_for('usuario_cadastrar')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{url_for('usuario_editar', id=usuario.id)}}" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="nome" class="form-label">Nome</label>
-                            <input type="text" class="form-control rounded-pill" id="nome" name="campoNome" required>
-                        </div>
+                            <input value = "{{usuario.nome}}" type="text" class="form-control rounded-pill" id="nome" name="campoNome" required>
+                        </div>                                                                                                                                                  
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mail</label>
-                            <input type="email" class="form-control rounded-pill" id="email" name="campoEmail" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="telefone" class="form-label">Telefone</label>
-                            <input type="telefone" class="form-control rounded-pill mascara-telefone" id="telefone" name="campoTelefone" required>
+                            <input value = "{{usuario.email}}" type="email" class="form-control rounded-pill" id="email" name="campoEmail" required>
                         </div>
                         <div class="mb-3">
                             <label for="senha" class="form-label">Senha</label>
@@ -34,22 +30,20 @@
                         <div class="mb-3">
                             <label for="cargo" class="form-label">Cargo</label>
                             <select class="form-control rounded-pill" id="cargo" name="campoCargo" required>
-
                                 {% for c in cargos %}
-                                    <option value="{{c.id}}">{{c.cargo}}</option>
+                                    <option value="{{ c.id }}" {% if usuario.role_id == c.id %} selected {% endif %}>
+                                        {{ c.cargo }}
+                                    </option>
                                 {% endfor %}
-                               
                             </select>
-                        </div>
+                        </div>                     
+                          
                         <div class="mb-3">
                             <label for="foto_perfil" class="form-label">Foto de Perfil</label>
                             <input type="file" class="form-control rounded-pill" id="foto_perfil" name="campoFotoPerfil" accept="image/*">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Cadastrar</button>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Salvar</button>
                     </form>
-                </div>
-                <div class="card-footer text-center">
-                    <a href="{{ url_for('principal') }}">Já tem uma conta? Faça login!</a>
                 </div>
             </div>
         </div>

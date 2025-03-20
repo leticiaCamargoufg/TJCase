@@ -1,10 +1,26 @@
 {%extends 'estrutura/base.html'%}
  
 {%block conteudo%}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mt-3">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                    <span class="font-weight-bold">{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Usuários</h6>
-        <a href="{{url_for('usuario_cadastrar')}}" class="btn btn-primary btn-sm">
+        <a href="{{ url_for('usuario_cadastrar') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus"></i> Adicionar
         </a>
     </div>
@@ -13,35 +29,41 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Nome</th>
                         <th>E-mail</th>
                         <th>Cargo</th>
                         <th>Status</th>
-                        <th class="text-center">Ações</th> <!-- Nova coluna -->
+                        <th class="text-center">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for usuario in usuarios %}
                     <tr>
-                        <td>1</td>
-                        <td>Fulano</td>
-                        <td>fulano@gmail.com</td>
-                        <td>Líder</td>
-                        <td>Ativo</td>
+                        <td>{{ usuario.nome }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.role.cargo }}</td>
                         <td class="text-center">
-                            <a href="#" class="btn btn-warning btn-sm">
+                            {% if usuario.ativo == 1 %}
+                                <span class="badge badge-success">Ativo</span>
+                            {% else %}
+                                <span class="badge badge-danger">Desativado</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ url_for('usuario_editar', id=usuario.id) }}" class="btn btn-warning btn-sm">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
-                            <a href="#" class="btn btn-danger btn-sm">
+                            <a href="{{ url_for('usuario_excluir', id=usuario.id) }}" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
                         </td>
                     </tr>
-                    <!-- Adicione mais linhas conforme necessário -->
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
 
 {%endblock conteudo%}

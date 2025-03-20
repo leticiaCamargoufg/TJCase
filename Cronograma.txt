@@ -1,0 +1,1 @@
+- Fazer switch para editar usuario e selecionar se esta ativo ou nao (vibe simer)
