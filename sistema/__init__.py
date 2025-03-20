@@ -45,8 +45,9 @@ def require_roles(f):
                                    
 from sistema.models import base_model
 from sistema.models.autenticacao import role_model
-from sistema.models.autenticacao import usuario_model
 from sistema.models.upload_arquivo import upload_arquivo_model
+from sistema.models.autenticacao import usuario_model
+
 
 from sistema.views.autenticacao import login_view
 from sistema.views.autenticacao import usuario_view

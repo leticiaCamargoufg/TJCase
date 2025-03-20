@@ -21,9 +21,9 @@ class UsuarioModel(BaseModel, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     role = db.relationship('RoleModel', backref=db.backref('usuario', lazy = True))
     
-    #Relacionamento 1:1 com tabela 'upload_aquivos'
-    foto_perfil_id = db.Column(db.Integer, db.ForeignKey('upload_arquivo.id'))
-    foto_perfil = db.relationship('UploadArquivoModel', backref=db.backref('usuario', lazy = True))
+    # #Relacionamento 1:1 com tabela 'upload_aquivos'
+    # foto_perfil_id = db.Column(db.Integer, db.ForeignKey('upload_arquivo.id'))
+    # foto_perfil = db.relationship('UploadArquivoModel', backref=db.backref('usuario', lazy = True))
     
     # #Relacionamento 1:N com tabela 'CasoTeste'
     # casos_teste = db.relationship('CasoTeste', backref='usuario', lazy=True)

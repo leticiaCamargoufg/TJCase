@@ -3,5 +3,6 @@
 mapeamento_roles = {
     # chave = rota, valor = lista com cargos com rotas permitidas
     
-    'casos_teste': ['tester', 'liderQA'],
+    'usuarios_listar': ['Líder', 'admin'],
+    'usuarios_cadastrar': ['Gestor', 'admin'],
 }
