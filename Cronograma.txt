@@ -1,1 +1,3 @@
 - Fazer switch para editar usuario e selecionar se esta ativo ou nao (vibe simer)
+- Ajustar senha na edião, validar se quer trocar a senha, se nao apenas confere
+- fazer upload de foto

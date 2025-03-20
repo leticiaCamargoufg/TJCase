@@ -1,14 +1,16 @@
-from sistema import app, db
+from sistema import app, db, require_roles
 from flask import render_template, request, redirect, url_for, flash
 from sistema.models.autenticacao.role_model import RoleModel
 from sistema.models.autenticacao.usuario_model import UsuarioModel
 
 @app.route('/usuarios')
+@require_roles
 def usuarios_listar():
     usuarios = UsuarioModel.query.all()  # Busca todos os usuários cadastrados
     return render_template('autenticacao/usuarios_listar.html', usuarios=usuarios)
 
 @app.route('/usuario/cadastrar', methods=['GET', 'POST'])
+@require_roles
 def usuario_cadastrar():
     cargos = RoleModel.busca_roles_asc_cargo()  # Busca os cargos disponíveis
 
@@ -48,6 +50,7 @@ def usuario_cadastrar():
     return render_template('autenticacao/usuario_cadastrar.html', cargos=cargos)
 
 @app.route("/usuario/editar/<int:id>", methods=['GET', 'POST'])
+@require_roles
 def usuario_editar(id):
     cargos = RoleModel.busca_roles_asc_cargo() 
     usuario = UsuarioModel.query.filter_by(id=id).first()
@@ -77,6 +80,7 @@ def usuario_editar(id):
 
 
 @app.route("/usuario/excluir/<int:id>", methods=['GET', 'POST'])
+@require_roles
 def usuario_excluir(id):
     usuario = UsuarioModel.query.filter_by(id=id).first()
 

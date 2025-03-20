@@ -36,6 +36,7 @@ class UsuarioModel(BaseModel, UserMixin):
         self.senha_hash = generate_password_hash(senha_hash)
         self.role_id = role_id
         self.ativo = ativo
+        
     def set_password(self, senha):
         """Gera um hash seguro da senha e armazena"""
         self.senha_hash = generate_password_hash(senha)
@@ -43,3 +44,6 @@ class UsuarioModel(BaseModel, UserMixin):
     def check_password(self, senha):
         """Verifica se a senha digitada corresponde ao hash armazenado"""
         return check_password_hash(self.senha_hash, senha)
+    
+    def is_active(self):
+        return self.ativo

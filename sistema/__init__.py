@@ -30,16 +30,25 @@ def unauthorized():
 #controle de acesso
 def require_roles(f):
     @wraps(f)
-    def wrapped(*args, **kargs):
+    def wrapped(*args, **kwargs):
         endpoint = request.endpoint
-        requires_roles = mapeamento_roles.get(endpoint, [])
-        
-        #cargo do user
+        requires_roles = mapeamento_roles.get(endpoint, [])  # Obtém a permissão necessária para a rota
+
+        # Verifica se o usuário está autenticado
+        if not current_user.is_authenticated:
+            flash("Você precisa estar logado para acessar esta página!", "warning")
+            return redirect(url_for("login"))  # Redireciona para login se não autenticado
+
+        # Obtém o cargo do usuário
         user_role = current_user.role.nome
-        
-        if not user_role in require_roles:
-            return render_template()
-        return f(*args, **kargs)
+
+        # Se a rota requer permissão e o usuário não tem
+        if requires_roles and user_role not in requires_roles:
+            flash("Você não tem permissão para acessar esta página!", "danger")
+            return redirect(url_for("index"))  # Redireciona para home
+
+        return f(*args, **kwargs)
+
     return wrapped
                                    
                                    
