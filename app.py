@@ -1,5 +1,6 @@
-from sistema import app  # Agora importa `app` corretamente
 from flask_login import LoginManager
+
+from sistema import app  # Agora importa `app` corretamente
 from sistema.models.autenticacao.usuario_model import UsuarioModel
 
 # Configuração do Flask-Login

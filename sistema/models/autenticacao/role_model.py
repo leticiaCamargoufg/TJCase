@@ -1,5 +1,7 @@
-from sistema.models.base_model import BaseModel, db
 from sqlalchemy import asc
+
+from sistema.models.base_model import BaseModel, db
+
 
 class RoleModel(BaseModel):
     '''Model de registro de users '''

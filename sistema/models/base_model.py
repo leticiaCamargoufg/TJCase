@@ -1,6 +1,8 @@
-from sistema import db
 from datetime import datetime
+
 from pytz import timezone
+
+from sistema import db
 
 fuso = timezone('America/Sao_Paulo')
 

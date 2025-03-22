@@ -1,5 +1,5 @@
-import os
 from flask import current_app
+
 
 def allowed_file(filename):
     allowed_extensions = current_app.config.get("ALLOWED_EXTENSIONS", {"png", "jpg", "jpeg", "gif"})

@@ -1,18 +1,21 @@
 import os
-from flask import render_template, request, redirect, url_for, flash
+
+from flask import flash, redirect, render_template, request, url_for
+from werkzeug.utils import secure_filename
+
 from sistema import app, db, require_roles  # Importa app corretamente
 from sistema.models.autenticacao.role_model import RoleModel
 from sistema.models.autenticacao.usuario_model import UsuarioModel
-from sistema.models.upload_arquivo.upload_arquivo_model import UploadArquivoModel
-from werkzeug.utils import secure_filename
+from sistema.models.upload_arquivo.upload_arquivo_model import \
+    UploadArquivoModel
+from utils.utils import allowed_file
 
-from sistema.utils import allowed_file
 
 @app.route('/usuarios')
 @require_roles
 def usuarios_listar():
     usuarios = UsuarioModel.query.all()
-    return render_template('autenticacao/usuarios_listar.html', usuarios=usuarios)
+    return render_template('autenticacao/usuario/usuarios_listar.html', usuarios=usuarios)
 
 @app.route('/usuario/cadastrar', methods=['GET', 'POST'])
 @require_roles
@@ -77,7 +80,7 @@ def usuario_cadastrar():
         flash("Usuário cadastrado com sucesso!", "success")
         return redirect(url_for('usuarios_listar'))
 
-    return render_template('autenticacao/usuario_cadastrar.html', cargos=cargos)
+    return render_template('autenticacao/usuario/usuario_cadastrar.html', cargos=cargos)
 
 
 @app.route("/usuario/editar/<int:id>", methods=['GET', 'POST'])
@@ -141,7 +144,7 @@ def usuario_editar(id):
         flash("Usuário atualizado com sucesso!", "success")
         return redirect(url_for('usuarios_listar'))  # Redireciona após salvar
 
-    return render_template("autenticacao/usuario_editar.html", usuario=usuario, cargos=cargos)
+    return render_template("autenticacao/usuario/usuario_editar.html", usuario=usuario, cargos=cargos)
 
 
 @app.route("/usuario/excluir/<int:id>", methods=['GET', 'POST'])

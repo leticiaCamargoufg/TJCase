@@ -1,10 +1,12 @@
 import os
+
 from flask import Flask, flash, redirect, render_template, request, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_login import LoginManager, current_user
-from mapeamento_roles import mapeamento_roles
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
 from config import *  # Importa configurações externas
+from utils.mapeamento_roles import mapeamento_roles
 
 # Inicializa o app Flask
 app = Flask(__name__)
@@ -61,9 +63,9 @@ def require_roles(f):
 
 # Importa os modelos
 from sistema.models import base_model
+from sistema.models.autenticacao import role_model, usuario_model
 from sistema.models.upload_arquivo import upload_arquivo_model
-from sistema.models.autenticacao import role_model
-from sistema.models.autenticacao import usuario_model
+
 
 @app.context_processor
 def inject_usuario():
@@ -73,5 +75,4 @@ def inject_usuario():
     return dict(usuario=current_user)
 
 # Importa as views
-from sistema.views.autenticacao import login_view
-from sistema.views.autenticacao import usuario_view
+from sistema.views.autenticacao import login_view, usuario_view

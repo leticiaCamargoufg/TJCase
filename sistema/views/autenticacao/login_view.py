@@ -1,8 +1,9 @@
-from flask_login import current_user, login_user
-from sistema import app, require_roles, request
 from flask import flash, redirect, render_template, url_for
+from flask_login import login_user
 
+from sistema import app, request, require_roles
 from sistema.models.autenticacao.usuario_model import *
+
 #from flask_login import login_required
 
 @app.route('/')

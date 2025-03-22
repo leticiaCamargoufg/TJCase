@@ -1,5 +1,6 @@
 from sistema.models.base_model import BaseModel, db
 
+
 class UploadArquivoModel(BaseModel):
     
     '''Model reponsável por armazenar todos os arquivos que for feito upload'''

@@ -1,10 +1,12 @@
 from flask import url_for
-from sistema.models.base_model import BaseModel, db
-from sistema import login_manager
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from sistema.models.upload_arquivo.upload_arquivo_model import UploadArquivoModel
+from sistema import login_manager
+from sistema.models.base_model import BaseModel, db
+from sistema.models.upload_arquivo.upload_arquivo_model import \
+    UploadArquivoModel
+
 
 @login_manager.user_loader
 def get_user(user_id):
