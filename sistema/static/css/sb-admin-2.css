@@ -9503,6 +9503,27 @@ button.bg-dark:focus {
   text-align: center !important;
 }
 
+.logo-sidebar {
+    width: 100px;  /* Reduz o tamanho da imagem */
+    height: 30px; /* Mantém a proporção */
+    border-radius: 50%; /* Deixa a imagem arredondada */
+    object-fit: cover; /* Evita distorção da imagem */
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre a imagem e o texto */
+    text-decoration: none; /* Remove o sublinhado do link */
+}
+
+.sidebar-brand-text {
+    font-size: 16px; /* Reduz um pouco o tamanho do texto */
+    
+    color: #fff; /* Ajuste conforme o tema */
+}
+
+
 @media (min-width: 576px) {
   .text-sm-left {
     text-align: left !important;
