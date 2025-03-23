@@ -6,7 +6,7 @@ from sistema import login_manager
 from sistema.models.base_model import BaseModel, db
 from sistema.models.upload_arquivo.upload_arquivo_model import \
     UploadArquivoModel
-
+from sistema.models.projeto.projeto_model import *
 
 @login_manager.user_loader
 def get_user(user_id):
@@ -30,8 +30,12 @@ class UsuarioModel(BaseModel, UserMixin):
     foto_perfil_id = db.Column(db.Integer, db.ForeignKey('upload_arquivo.id'))
     foto_perfil = db.relationship('UploadArquivoModel', backref=db.backref('usuario', lazy = True))
     
-    # #Relacionamento 1:N com tabela 'CasoTeste'
-    # casos_teste = db.relationship('CasoTeste', backref='usuario', lazy=True)
+    #Relacionamento 1:N com tabela 'CasoTeste'
+    casos_de_teste = db.relationship('CasoDeTesteModel', back_populates='usuario')
+    
+    # Relacionamento N:N com projetos
+    projetos = db.relationship("ProjetoModel", secondary=projeto_usuario, back_populates="usuarios")
+
 
     ativo = db.Column(db.Boolean, nullable=False, default= True)
 

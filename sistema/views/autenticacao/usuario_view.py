@@ -36,7 +36,7 @@ def usuario_cadastrar():
         usuario_existente = UsuarioModel.query.filter_by(email=campo_email).first()
         if usuario_existente:
             flash("E-mail já cadastrado!", "danger")
-            return redirect(url_for('usuarios_cadastrar'))
+            return redirect(url_for('usuario_cadastrar'))
         
         campo_foto = request.files['campoFotoPerfil']
         foto_id = None  
@@ -157,6 +157,7 @@ def usuario_excluir(id):
         return redirect(url_for("usuarios_listar"))
 
     usuario.ativo = 0  # Define a coluna 'ativo' como 0 (desativado)
+    usuario.deletado = 1
     db.session.commit()  # Salva a alteração no banco
 
     flash("Usuário desativado com sucesso!", "success")

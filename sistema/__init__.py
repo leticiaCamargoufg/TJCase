@@ -1,10 +1,8 @@
 import os
-
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_login import LoginManager, current_user
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-
 from config import *  # Importa configurações externas
 from utils.mapeamento_roles import mapeamento_roles
 
@@ -65,6 +63,8 @@ def require_roles(f):
 from sistema.models import base_model
 from sistema.models.autenticacao import role_model, usuario_model
 from sistema.models.upload_arquivo import upload_arquivo_model
+from sistema.models.caso_teste import caso_teste_model
+from sistema.models.projeto import projeto_model
 
 
 @app.context_processor
