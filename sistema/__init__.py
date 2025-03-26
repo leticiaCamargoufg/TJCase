@@ -76,3 +76,4 @@ def inject_usuario():
 
 # Importa as views
 from sistema.views.autenticacao import login_view, usuario_view
+from sistema.views.casoDeTeste import casoDeTeste_view
