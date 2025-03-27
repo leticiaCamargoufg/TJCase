@@ -1,0 +1,62 @@
+
+<!-- Modal de Cadastro -->
+<div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalCadastroLabel">Adicionar Caso de Teste</h5>
+                <button type="button" class="modal-header close" data-bs-dismiss="modal" aria-label="Fechar">x</button>
+            </div>
+            <div class="modal-body">
+                <form action="{{url_for('caso_cadastrar')}}" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="projeto" class="form-label">Projeto</label>
+                            <select class="form-control rounded-pill" id="projeto" name="campoProjeto" required>
+                                <option value="" selected disabled>Selecione uma opção</option>
+                                {% for c in projetos %}
+                                    <option value="{{c.id}}">{{c.nome}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-control rounded-pill" id="status" name="campoStatus" required>
+                                <option value="" selected disabled>Selecione uma opção</option>
+                                <option value="Rascunho">Rascunho</option>
+                                <option value="Em Revisão">Em Revisão</option>
+                                <option value="RascunhoRevisado">Rascunho (Revisado)</option>
+                                <option value="Revisado">Revisado</option>
+                                <option value="Ativo">Ativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="titulo" class="form-label">Título</label>
+                        <input type="text" class="form-control" id="titulo" name="campoTitulo" required>
+                    </div>
+                        
+                    <div class="mb-3">
+                        <label for="objetivo" class="form-label">Objetivo</label>
+                        <textarea class="form-control" id="objetivo" name="campoObjetivo" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passos" class="form-label">Passo-a-passo</label>
+                        <textarea class="form-control" id="passos" name="campoPassos" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="resultadoEsperado" class="form-label">Resultado Esperado</label>
+                        <textarea class="form-control" id="resultadoEsperado" name="campoResultadoEsperado" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="obervacoes" class="form-label">Observações</label>
+                        <textarea class="form-control" id="obervacoes" name="campoObservacoes" ></textarea>
+                    </div>
+                    <input type="hidden" name="usuario_id" value="{{ current_user.id }}">
+                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

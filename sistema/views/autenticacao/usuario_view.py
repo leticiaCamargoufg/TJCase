@@ -108,7 +108,7 @@ def usuario_editar(id):
         usuario.set_password(usuario.senha_hash)
         
         
-         # 🔹 Lógica para a foto de perfil (Manter ou Substituir)
+       
         campo_foto = request.files['campoFotoPerfil']
 
         if campo_foto and allowed_file(campo_foto.filename):

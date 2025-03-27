@@ -4,7 +4,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Repositório - Projeto 1</h6>
-        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCadastro">
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCadastro" href="{{ url_for('caso_cadastrar', acao='adicionar') }}">
             <i class="fas fa-plus"></i> Adicionar Caso de Teste
         </button>
     </div>
@@ -27,18 +27,23 @@
                         <td>{{ caso.titulo }}</td>
                         <td>{{ caso.objetivo }}</td>
                         <td class="text-center">
-                            {% if caso.status == 'Aprovado' %}
-                                <span class="badge badge-success">Aprovado</span>
-                            {% elif caso.status == 'Em andamento' %}
-                                <span class="badge badge-warning">Em andamento</span>
+                            {% if caso.status == 'Rascunho' %}
+                                <span class="badge badge-success">Rascunho</span>
+                            {% elif caso.status == 'Em Revisão' %}
+                                <span class="badge badge-warning">Em Revisão</span>
+                            {% elif caso.status == 'Rascunho (Revisado)' %}
+                                <span class="badge badge-warning">Rascunho (Revisado)</span>
+                            {% elif caso.status == 'Ativo' %}
+                                <span class="badge badge-warning">Ativo</span>
                             {% else %}
-                                <span class="badge badge-danger">Reprovado</span>
+                                <span class="badge badge-danger">None</span>
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <a href="#" class="btn btn-warning btn-sm">
-                                <i class="fas fa-pencil-alt"></i>
-                            </a>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditar" onclick="preencherModalEditar('{{ caso.id }}', '{{ caso.titulo }}', '{{ caso.objetivo }}', '{{ caso.status }}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
+                            
                             <a href="#" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash-alt"></i>
                             </a>
@@ -51,51 +56,19 @@
     </div>
 </div>
 
+{% if acao == 'editar' %}
+    {% include 'casoDeTeste/casoDeTeste_editar.html' %}
+{% else %}
+    {% include 'casoDeTeste/casoDeTeste_cadastrar.html' %}
+{% endif %}
 
-<!-- Modal de Cadastro -->
-<div class="modal fade" id="modalCadastro" tabindex="-1" aria-labelledby="modalCadastroLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="modalCadastroLabel">Adicionar Caso de Teste</h5>
-                <button type="button" class="modal-header close" data-bs-dismiss="modal" aria-label="Fechar">x</button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ url_for('caso_cadastrar') }}" method="POST">
-                    <div class="mb-3">
-                        <label for="titulo" class="form-label">Título</label>
-                        <input type="text" class="form-control" id="titulo" name="campoTitulo" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="projeto" class="form-label">Projeto</label>
-                        <input type="text" class="form-control" id="projeto" name="campoProjeto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <textarea class="form-control" id="status" name="campoStatus" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="objetivo" class="form-label">Objetivo</label>
-                        <textarea class="form-control" id="objetivo" name="campoObjetivo" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="passos" class="form-label">Passo-a-passo</label>
-                        <textarea class="form-control" id="passos" name="campoPassos" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="resultadoEsperado" class="form-label">Resultado Esperado</label>
-                        <textarea class="form-control" id="resultadoEsperado" name="campoResultadoEsperado" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="obervacoes" class="form-label">Observações</label>
-                        <textarea class="form-control" id="obervacoes" name="campoObservacoes" ></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Cadastrar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+<script>
+function preencherModalEditar(id, titulo, objetivo, status) {
+    document.getElementById('titulo').value = titulo;
+    document.getElementById('objetivo').value = objetivo;
+    document.getElementById('status').value = status;
+}
+</script>
 
 
 {% endblock conteudo %}
