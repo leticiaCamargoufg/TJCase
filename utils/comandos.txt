@@ -2,10 +2,9 @@ Bibliotecas do ambiente:
 pip freeze > requirements.txt (guardar todas as dependencias)
 pip install -r requirements.txt (instalar automaticamente todas as dependencias)
 
-
 banco de dados:
 flask db migrate - subir deploy banco
-flask db upgrade -
+flask db upgrade - confirmar alteracoes
 
 Ativação do venv:
  .venv\Scripts\activate
