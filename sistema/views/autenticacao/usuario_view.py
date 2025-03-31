@@ -155,6 +155,10 @@ def usuario_excluir(id):
     if not usuario:
         flash("Usuário não encontrado!", "danger")
         return redirect(url_for("usuarios_listar"))
+    
+    if usuario.ativo == 0:
+        flash("Usuário já desativado!", "danger")
+        return redirect(url_for("usuarios_listar"))
 
     usuario.ativo = 0  # Define a coluna 'ativo' como 0 (desativado)
     usuario.deletado = 1
