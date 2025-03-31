@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import *  # Importa configurações externas
 from utils.mapeamento_roles import mapeamento_roles
+from flask import g
+
 
 # Inicializa o app Flask
 app = Flask(__name__)
@@ -66,6 +68,16 @@ from sistema.models.upload_arquivo import upload_arquivo_model
 from sistema.models.caso_teste import caso_teste_model
 from sistema.models.projeto import projeto_model
 
+# Importa as views
+from sistema.views.autenticacao import login_view, usuario_view
+from sistema.views.casoDeTeste import casoDeTeste_view
+
+@app.before_request
+def carregar_projetos():
+    # Carregar os projetos ativos antes de qualquer requisição
+    projetos = projeto_model.ProjetoModel.query.filter_by(ativo=1).all()
+    # Passar a lista de projetos globalmente para todos os templates
+    g.projetos = projetos
 
 @app.context_processor
 def inject_usuario():
@@ -73,7 +85,3 @@ def inject_usuario():
     Torna a variável `usuario` disponível globalmente em todos os templates.
     """
     return dict(usuario=current_user)
-
-# Importa as views
-from sistema.views.autenticacao import login_view, usuario_view
-from sistema.views.casoDeTeste import casoDeTeste_view

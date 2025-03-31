@@ -1,27 +1,30 @@
-import os
-
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user
-from werkzeug.utils import secure_filename
-
-from sistema import app, db, require_roles  # Importa app corretamente
-from sistema.models.autenticacao.role_model import RoleModel
-from sistema.models.autenticacao.usuario_model import UsuarioModel
+from sistema import app, db, require_roles 
 from sistema.models.caso_teste.caso_teste_model import CasoDeTesteModel
 from sistema.models.projeto.projeto_model import ProjetoModel
-from sistema.models.upload_arquivo.upload_arquivo_model import \
-    UploadArquivoModel
-from utils.utils import allowed_file
-
 
 
 @app.route('/listarCasoDeTeste')
 @require_roles
 def caso_listar():
-    casosDeTestes = CasoDeTesteModel.query.filter_by(ativo=1).all()
     projetos = ProjetoModel.query.all()
+  
+    caso_id = request.args.get('projeto_id')  # Obtém o projeto_id passado pela URL
     
-    return render_template('casoDeTeste/casoDeTeste_listar.html', casosDeTestes = casosDeTestes, projetos=projetos)
+    if caso_id:
+        # Filtra por projeto_id e somente casos ativos
+        casosDeTestes = CasoDeTesteModel.query.filter_by(projeto_id=caso_id, ativo=1).all()
+        
+        # Busca o nome do projeto pelo projeto_id
+        projeto_atual = ProjetoModel.query.get(caso_id)
+    else:
+        # Se nenhum projeto_id for passado, filtra apenas casos ativos
+        casosDeTestes = CasoDeTesteModel.query.filter_by(ativo=1).all()
+        projeto_atual = None  # Nenhum projeto específico selecionado
+
+    return render_template('casoDeTeste/casoDeTeste_listar.html', casosDeTestes=casosDeTestes, projetos=projetos, projeto_atual=projeto_atual)
+
 
 @app.route('/cadastrarCasoDeTeste', methods=['GET', 'POST'])
 @require_roles
@@ -88,7 +91,7 @@ def caso_editar(id):
         campo_resultadoEsperado = request.form.get('campoResultadoEsperado')
         campo_observacoes = request.form.get('campoObservacoes')
 
-        # Verifica se já existe um caso de teste com o mesmo título (exceto o atual)
+       
         caso_existente = CasoDeTesteModel.query.filter(
             CasoDeTesteModel.titulo == campo_titulo, CasoDeTesteModel.id != id
         ).first()
@@ -96,8 +99,7 @@ def caso_editar(id):
         if caso_existente:
             flash("Já existe um caso de teste com este título!", "danger")
             return redirect(url_for('caso_editar', id=id))
-
-        # Atualiza os dados do caso de teste existente
+      
         casoDeTeste.titulo = campo_titulo
         casoDeTeste.status = campo_status
         casoDeTeste.objetivo = campo_objetivo
@@ -110,24 +112,36 @@ def caso_editar(id):
         db.session.commit()
 
         flash("Caso de teste atualizado com sucesso!", "success")
-        return redirect(url_for('caso_listar'))
-
+        return redirect(url_for('caso_listar', projeto_id=casoDeTeste.projeto_id)) 
+    
     return render_template('casoDeTeste/casoDeTeste_editar.html', caso=casoDeTeste, projetos = projetos)
 
 
 @app.route("/casoDeTeste/excluir/<int:id>", methods=['GET', 'POST'])
 @require_roles
 def caso_excluir(id):
+    
     casoDeTeste = CasoDeTesteModel.query.get(id)
 
     if not casoDeTeste:
         flash("Caso de Teste não encontrado!", "danger")
         return redirect(url_for("caso_listar"))
 
-    casoDeTeste.ativo = 0
-    casoDeTeste.deletado = 1
-    db.session.commit()  # Salva a alteração no banco
+    casoDeTeste.ativo = 0  # Marcar como inativo
+    casoDeTeste.deletado = 1  # Marcar como deletado
+    db.session.commit()
 
     flash("Caso de teste excluído com sucesso!", "success")
-    casosDeTestes = CasoDeTesteModel.query.all()
-    return redirect(url_for('caso_listar', casosDeTestes = casosDeTestes))
+
+    # Agora, redirecione para a listagem de casos de teste ativos
+    return redirect(url_for('caso_listar', projeto_id=casoDeTeste.projeto_id)) 
+
+
+@app.route('/casoDeTeste/visualizar/<int:id>')
+@require_roles
+def caso_visualizar(id):
+    casoDeTeste = CasoDeTesteModel.query.get(id)
+    if not casoDeTeste:
+        flash("Caso de Teste não encontrado!", "danger")
+        return redirect(url_for("caso_listar"))
+    return render_template('casoDeTeste/casoDeTeste_visualizar.html', caso=casoDeTeste)

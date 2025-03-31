@@ -3,7 +3,16 @@
 {% block conteudo %}
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-        <h6 class="m-0 font-weight-bold text-primary">Repositório - Projeto 1</h6>
+        <h6 class="m-0 font-weight-bold text-primary">
+            Repositório - 
+            {% if projeto_atual %}
+                {{ projeto_atual.nome }}
+            {% else %}
+                Todos os Projetos
+            {% endif %}
+        </h6>
+
+
         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCadastro">
             <i class="fas fa-plus"></i> Adicionar Caso de Teste
         </button>
@@ -54,15 +63,27 @@
 
                         </td>
                         <td class="text-center">
-                            <a href="{{ url_for('caso_editar', id=caso.id) }}" class="btn btn-warning btn-sm">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{{ url_for('caso_excluir', id=caso.id) }}" class="btn btn-danger btn-sm">
-                                <i class="fas fa-trash"></i> 
-                            </a>
-                            
-                            </a>
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.role.nome in ['admin', 'tester'] %}
+                                    <!-- Opções de Editar e Excluir para Admin e Tester -->
+                                    <a href="{{ url_for('caso_editar', id=caso.id) }}" class="btn btn-warning btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{{ url_for('caso_excluir', id=caso.id) }}" class="btn btn-danger btn-sm">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                    <a href="{{ url_for('caso_visualizar', id=caso.id) }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                {% else %}
+                                    <!-- Opção de Visualização para outros usuários -->
+                                    <a href="{{ url_for('caso_visualizar', id=caso.id) }}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                         </td>
+                        
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -73,5 +94,6 @@
 
 {%include 'casoDeTeste/casoDeTeste_cadastrar.html'%}
        
+     
 
 {% endblock conteudo %}

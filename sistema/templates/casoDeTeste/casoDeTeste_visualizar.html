@@ -1,0 +1,47 @@
+{% extends 'estrutura/base.html' %}
+
+{% block conteudo %}
+<div class="bg-primary text-white p-3 rounded ">
+    <h5>{{ caso.id }} - {{ caso.titulo }}</h5>
+
+
+<!-- Tabela de Visualização -->
+<div class="card shadow-sm ">
+    
+        <table class="table table-hover table-striped">
+            <tbody>
+                <tr>
+                    <th class="text-nowrap">Projeto</th>
+                    <td>{{ caso.projeto.nome }}</td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">Status</th>
+                    <td>{{ caso.status }}</td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">Objetivo</th>
+                    <td>{{ caso.objetivo }}</td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">Passo-a-passo</th>
+                    <td>{{ caso.passos }}</td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">Resultado Esperado</th>
+                    <td>{{ caso.resultado_esperado }}</td>
+                </tr>
+                <tr>
+                    <th class="text-nowrap">Observações</th>
+                    <td>{{ caso.observacoes }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- Botão de Fechar ou Voltar -->
+<div class="mt-3">
+    <a href="{{ url_for('caso_listar') }}" class="btn btn-secondary">Voltar</a>
+</div>
+
+{% endblock conteudo %}

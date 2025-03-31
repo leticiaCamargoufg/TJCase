@@ -3,7 +3,7 @@ import os
 from flask import flash, redirect, render_template, request, url_for
 from werkzeug.utils import secure_filename
 
-from sistema import app, db, require_roles  # Importa app corretamente
+from sistema import app, db, require_roles  
 from sistema.models.autenticacao.role_model import RoleModel
 from sistema.models.autenticacao.usuario_model import UsuarioModel
 from sistema.models.upload_arquivo.upload_arquivo_model import \
